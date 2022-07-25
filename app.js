@@ -16,7 +16,7 @@ const spotifyApi = new SpotifyWebApi({
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
 });
-
+//AccessToken:
 spotifyApi
   .clientCredentialsGrant()
   .then((data) => spotifyApi.setAccessToken(data.body["access_token"]))
@@ -33,7 +33,10 @@ app.get("/artist-search", (req, res) => {
     .searchArtists(req.query.artist)
     .then((data) => {
       console.log("The received data from the API: ", data.body);
-      res.render("artist-search-results");
+      console.log("artist ", data.body.artists.items[0]);
+      console.log("image", data.body.artists.items[0].url);
+      res.render("artist-search-results", { artists: data.body.artists.items });
+
       // ----> 'HERE WHAT WE WANT TO DO AFTER RECEIVING THE DATA FROM THE API'
     })
     .catch((err) =>
@@ -41,6 +44,6 @@ app.get("/artist-search", (req, res) => {
     );
 });
 
-app.listen(3000, () =>
+app.listen(3010, () =>
   console.log("My Spotify project running on port 3000 🎧 🥁 🎸 🔊")
 );
