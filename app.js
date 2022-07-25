@@ -43,7 +43,52 @@ app.get("/artist-search", (req, res) => {
       console.log("The error while searching artists occurred: ", err)
     );
 });
+app.get("/albums/:artistId", (req, res) => {
+  // Get Elvis' albums
+  spotifyApi
+    .getArtistAlbums(req.params.artistId)
+    .then((data) => {
+      res.render("albums", {
+        albumArtistName: data.body.items[0].artists[0].name,
+        albums: data.body.items,
+      });
+    })
+    .catch((err) =>
+      console.log("The error while searching artists occurred: ", err)
+    );
+});
 
-app.listen(3010, () =>
-  console.log("My Spotify project running on port 3000 🎧 🥁 🎸 🔊")
+// Get tracks in an album
+app.get("/tracks/:albumId", (req, res) => {
+  spotifyApi.getAlbumTracks(req.params.albumId, { limit: 15, offset: 0 }).then(
+    function (data) {
+      res.render("tracks", {
+        tracks: data.body.items,
+      });
+    },
+    function (err) {
+      console.log("Something went wrong!", err);
+    }
+  );
+});
+// app.get("/albums/:albumId", (req, res, next) => {
+//   spotifyApi.getArtistAlbums(
+//     req.params.albumId,
+//     { limit: 10, offset: 20 },
+//     res.render("albums", {
+//       albumArtistName: data.body.items[0].artists[0].name,
+//       albums: data.body.items,
+//     });
+//   })
+//     function (err, data) {
+//       if (err) {
+//         console.error("Something went wrong!");
+//       } else {
+//         console.log(data.body);
+//       }
+//     }
+//   );
+// });
+app.listen(3200, () =>
+  console.log("My Spotify project running on port 3200 🎧 🥁 🎸 🔊")
 );
